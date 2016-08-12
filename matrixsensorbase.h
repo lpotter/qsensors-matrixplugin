@@ -26,9 +26,9 @@
 #include <QAmbientTemperatureReading>
 #include <QPressureReading>
 
-#include "../cpp/driver/imu_data.h"
-#include "../cpp/driver/imu_sensor.h"
-#include "../cpp/driver/wishbone_bus.h"
+#include <matrix_hal/imu_data.h>
+#include <matrix_hal/imu_sensor.h>
+#include <matrix_hal/wishbone_bus.h>
 
 #include <QLoggingCategory>
 
