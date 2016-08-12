@@ -1,4 +1,4 @@
-%TEMPLATE = lib
+TEMPLATE = lib
 TARGET = $$qtLibraryTarget(qtsensors_matrix)
 QT = core sensors
 CONFIG += plugin debug
@@ -33,7 +33,6 @@ HEADERS += \
 PLUGIN_TYPE = sensors
 
 DESTDIR = $$PLUGIN_TYPE
-
 
 target.path = $$[QT_INSTALL_PLUGINS]/$$PLUGIN_TYPE
 INSTALLS += target
