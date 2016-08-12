@@ -141,63 +141,53 @@ void QMatrixSensorsPrivate::report(const matrix_hal::IMUSensor &data, MatrixSens
 {
     //qDebug() << Q_FUNC_INFO << what;
 
-//    if (what.testFlag(MatrixSensorBase::Humidity)) {
-//        if (data.humidityValid) {
-//            humidity = data.humidity;
-//            emit q->humidityChanged(humidity);
-//        }
+    //    if (what.testFlag(MatrixSensorBase::Humidity)) {
+    //        if (data.humidityValid) {
+    //            humidity = data.humidity;
+    //            emit q->humidityChanged(humidity);
+    //        }
+    //    }
+
+
+
+//    if (what.testFlag(MatrixSensorBase::Gyro)) {
+//        gyro.setTimestamp((quint64)data.timestamp);
+//        gyro.setX((qreal)data.gyro_x * RADIANS_TO_DEGREES);
+//        gyro.setY((qreal)data.gyro_y * RADIANS_TO_DEGREES);
+//        gyro.setZ((qreal)data.gyro_z * RADIANS_TO_DEGREES);
+
+//        emit q->gyroChanged(gyro);
 //    }
 
-
-
-    if (what.testFlag(MatrixSensorBase::Gyro)) {
-        if (data.gyroValid) {
-            gyro.setTimestamp((quint64)data.timestamp);
-            gyro.setX((qreal)data.gyro_x * RADIANS_TO_DEGREES);
-            gyro.setY((qreal)data.gyro_y * RADIANS_TO_DEGREES);
-            gyro.setZ((qreal)data.gyro_z * RADIANS_TO_DEGREES);
-
-            emit q->gyroChanged(gyro);
-        }
-    }
-
-    if (what.testFlag(MatrixSensorBase::Acceleration)) {
-        if (data.accelValid) {
-            acceleration.setTimestamp((quint64)data.timestamp);
-            acceleration.setX((qreal)data.accel_x * STANDARD_GRAVITY);
-            acceleration.setY((qreal)data.accel_y * STANDARD_GRAVITY);
-            acceleration.setZ((qreal)data.accel_z * STANDARD_GRAVITY);
-            emit q->accelerationChanged(acceleration);
-        }
-    }
-//    if (what.testFlag(MatrixSensorBase::Rotation)) {
-//        if (data.fusionPoseValid) {
-//            rotation.setTimestamp((quint64)data.timestamp);
-//            rotation.setFromEuler(toDeg360(data.fusionPose.x()),
-//                                   toDeg360(data.fusionPose.y()),
-//                                   toDeg360(data.fusionPose.z()));
-//            emit q->rotationChanged(rotation);
-//        }
+//    if (what.testFlag(MatrixSensorBase::Acceleration)) {
+//        acceleration.setTimestamp((quint64)data.timestamp);
+//        acceleration.setX((qreal)data.accel_x * STANDARD_GRAVITY);
+//        acceleration.setY((qreal)data.accel_y * STANDARD_GRAVITY);
+//        acceleration.setZ((qreal)data.accel_z * STANDARD_GRAVITY);
+//        emit q->accelerationChanged(acceleration);
 //    }
-    // in rtimulib compass is magnetometer and azimuth comes from
-    // sensorfusion algo
-//    if (what.testFlag(MatrixSensorBase::Compass)) {
-//        if (data.fusionPoseValid) {
-//            compass.setTimestamp((quint64)data.timestamp);
-//            compass.setAzimuth(toDeg360(data.fusionPose.z()));
-//                    emit q->compassChanged(compass);
-//        }
-//    }
+//    //    if (what.testFlag(MatrixSensorBase::Rotation)) {
+//    //            rotation.setTimestamp((quint64)data.timestamp);
+//    //            rotation.setFromEuler(toDeg360(data.fusionPose.x()),
+//    //                                   toDeg360(data.fusionPose.y()),
+//    //                                   toDeg360(data.fusionPose.z()));
+//    //            emit q->rotationChanged(rotation);
+//    //    }
+//    // in rtimulib compass is magnetometer and azimuth comes from
+//    // sensorfusion algo
+//    //    if (what.testFlag(MatrixSensorBase::Compass)) {
+//    //            compass.setTimestamp((quint64)data.timestamp);
+//    //            compass.setAzimuth(toDeg360(data.fusionPose.z()));
+//    //                    emit q->compassChanged(compass);
+//    //    }
 
-    if (what.testFlag(MatrixSensorBase::Magnetometer)) {
-        if (data.compassValid) {
-            mag.setTimestamp((qreal)data.timestamp);
-            mag.setX((qreal)data.mag_x * .000001);
-            mag.setY((qreal)data.mag_y * .000001);
-            mag.setZ((qreal)data.mag_z * .000001);
-            emit q->magnetometerChanged(mag);
-        }
-    }
+//    if (what.testFlag(MatrixSensorBase::Magnetometer)) {
+//        mag.setTimestamp((qreal)data.timestamp);
+//        mag.setX((qreal)data.mag_x * .000001);
+//        mag.setY((qreal)data.mag_y * .000001);
+//        mag.setZ((qreal)data.mag_z * .000001);
+//        emit q->magnetometerChanged(mag);
+//    }
 }
 
 MatrixSensorBase::MatrixSensorBase(QSensor *sensor)
