@@ -52,9 +52,9 @@ bool QMatrixSensorsPrivate::open()
     matrix_hal::WishboneBus* bus = new matrix_hal::WishboneBus();
     bus->SpiInit();
 
-    if (what.testFlag(MatrixSensorBase::Pressure)) {
+    if (q->sensorFlag.testFlag(MatrixSensorBase::Pressure)) {
         pressureSensor.Setup(bus);
-    } else if (what.testFlag(MatrixSensorBase::Temperature)) {
+    } else if (q->sensorFlag.testFlag(MatrixSensorBase::Temperature)) {
         humiditySensor.Setup(bus);
     } else {
         imuSensor.Setup(bus);
