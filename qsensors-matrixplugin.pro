@@ -7,7 +7,7 @@ OTHER_FILES = plugin.json \
     Sensors.conf
 CONFIG += c++11
 
-LIBS += -lmatrix_creator_hal.a
+LIBS += libmatrix_creator_hal.a
 
 SOURCES += main.cpp \
     matrixsensorbase.cpp \
