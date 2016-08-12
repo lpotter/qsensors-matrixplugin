@@ -23,6 +23,7 @@
 
 #include <unistd.h>
 #include <errno.h>
+#include <time.h>
 
 #define RADIANS_TO_DEGREES 57.2957795
 #define STANDARD_GRAVITY 9.80665
@@ -30,6 +31,23 @@
 
 static const int MAX_READ_ATTEMPTS = 5;
 //Q_LOGGING_CATEGORY(qMatrix, "sensor.matrix")
+
+quint64 produceTimestamp()
+{
+    struct timespec tv;
+    int ok;
+
+#ifdef CLOCK_MONOTONIC_RAW
+    ok = clock_gettime(CLOCK_MONOTONIC_RAW, &tv);
+    if (ok != 0)
+#endif
+    ok = clock_gettime(CLOCK_MONOTONIC, &tv);
+    Q_ASSERT(ok == 0);
+
+    quint64 result = (tv.tv_sec * 1000000ULL) + (tv.tv_nsec * 0.001); // scale to microseconds
+    return result;
+}
+
 
 QMatrixSensorsPrivate::QMatrixSensorsPrivate(MatrixSensorBase *q_ptr)
     : q(q_ptr),
@@ -69,7 +87,7 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
     if (what.testFlag(MatrixSensorBase::Pressure)) {
         pressureSensor.Read(&pressureData);
         if (pressure.pressure() != (qreal)pressureData.pressure) {
-            pressure.setTimestamp((quint64)data.timestamp);
+            pressure.setTimestamp(produceTimestamp());
             pressure.setPressure((qreal)pressureData.pressure);
             emit q->pressureChanged(pressure);
         }
@@ -78,14 +96,14 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
         humiditySensor.Read(&humidityData);
         if (temperature.temperature() != (qreal)humidityData.temperature) {
             temperature.setTemperature((qreal)humidityData.temperature);
-            temperature.setTimestamp((quint64)data.timestamp);
+            temperature.setTimestamp(produceTimestamp());
             emit q->temperatureChanged(temperature);
         }
     }
 
     if (what.testFlag(MatrixSensorBase::Acceleration)) {
         imuSensor.Read(&imuData);
-        acceleration.setTimestamp((quint64)data.timestamp);
+        acceleration.setTimestamp(produceTimestamp());
         acceleration.setX((qreal)imuData.accel_x * STANDARD_GRAVITY);
         acceleration.setY((qreal)imuData.accel_y * STANDARD_GRAVITY);
         acceleration.setZ((qreal)imuData.accel_z * STANDARD_GRAVITY);
@@ -94,7 +112,7 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
 
     if (what.testFlag(MatrixSensorBase::Gyro)) {
         imuSensor.Read(&imuData);
-        gyro.setTimestamp((quint64)data.timestamp);
+        gyro.setTimestamp(produceTimestamp());
         gyro.setX((qreal)imuData.gyro_x * RADIANS_TO_DEGREES);
         gyro.setY((qreal)imuData.gyro_y * RADIANS_TO_DEGREES);
         gyro.setZ((qreal)imuData.gyro_z * RADIANS_TO_DEGREES);
@@ -104,7 +122,7 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
 
     if (what.testFlag(MatrixSensorBase::Magnetometer)) {
         imuSensor.Read(&imuData);
-        mag.setTimestamp((qreal)data.timestamp);
+        mag.setTimestamp(produceTimestamp());
         mag.setX((qreal)imuData.mag_x * .000001);
         mag.setY((qreal)imuData.mag_y * .000001);
         mag.setZ((qreal)imuData.mag_z * .000001);
