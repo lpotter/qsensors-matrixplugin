@@ -24,15 +24,15 @@
 #include <QRotationReading>
 #include <QAmbientTemperatureReading>
 
-#include <imu_sensor.h>
-#include <imu_data.h>
+#include <matrix_hal/imu_sensor.h>
+#include <matrix_hal/imu_data.h>
 
 //temperature is part of humidity sensor
-#include <humidity_data.h>
-#include <humidity_sensor.h>
+#include <matrix_hal/humidity_data.h>
+#include <matrix_hal/humidity_sensor.h>
 
-#include <pressure_sensor.h>
-#include <pressure_data.h>
+#include <matrix_hal/pressure_sensor.h>
+#include <matrix_hal/pressure_data.h>
 
 class QMatrixSensorsPrivate
 {
