@@ -68,17 +68,19 @@ bool QMatrixSensorsPrivate::open()
     qDebug() << Q_FUNC_INFO;
 
     matrix_hal::WishboneBus* bus = new matrix_hal::WishboneBus();
-    bus->SpiInit();
+    if (bus->SpiInit()) {
 
-    if (q->sensorFlag.testFlag(MatrixSensorBase::Pressure)) {
-        pressureSensor.Setup(bus);
-    } else if (q->sensorFlag.testFlag(MatrixSensorBase::Temperature)) {
-        humiditySensor.Setup(bus);
-    } else {
-        imuSensor.Setup(bus);
+        if (q->sensorFlag.testFlag(MatrixSensorBase::Pressure)) {
+            pressureSensor.Setup(bus);
+        } else if (q->sensorFlag.testFlag(MatrixSensorBase::Temperature)) {
+            humiditySensor.Setup(bus);
+        } else {
+            imuSensor.Setup(bus);
+        }
+        imuInited = true;
     }
 
-    return true;
+    return imuInited;
 }
 
 void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
