@@ -54,20 +54,25 @@ QMatrixSensorsPrivate::QMatrixSensorsPrivate(MatrixSensorBase *q_ptr)
       imuInited(false),
       humidityInited(false),
       pressureInited(false),
-      temperatureFromHumidity(true)
+      temperatureFromHumidity(true),
+      bus(Q_NULLPTR)
 {
 
 }
 
 QMatrixSensorsPrivate::~QMatrixSensorsPrivate()
 {
+    delete bus;
+    bus = 0;
 }
 
 bool QMatrixSensorsPrivate::open()
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << q->sensorFlag;
 
-    matrix_hal::WishboneBus* bus = new matrix_hal::WishboneBus();
+    if (bus == Q_NULLPTR) {
+        bus = new matrix_hal::WishboneBus();
+    }
     if (bus->SpiInit()) {
 
         if (q->sensorFlag.testFlag(MatrixSensorBase::Pressure)) {

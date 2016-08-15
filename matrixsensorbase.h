@@ -75,7 +75,7 @@ signals:
     void magnetometerChanged(const QMagnetometerReading &value);
     void rotationChanged(const QRotationReading &value);//
 private:
-
+    matrix_hal::WishboneBus* bus;
 };
 
 #endif // MATRIXSENSORBASE_H
