@@ -205,7 +205,8 @@ MatrixSensorBase::MatrixSensorBase(QSensor *sensor)
     if (d_ptr->open()) {
         d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
         connect(&d_ptr->pollTimer, &QTimer::timeout, [this] { d_ptr->update(sensorFlag); });
-    }
+    } else
+        qWarning() << "Could not open matrix hal";
 }
 
 MatrixSensorBase::~MatrixSensorBase()
@@ -214,7 +215,7 @@ MatrixSensorBase::~MatrixSensorBase()
 
 void MatrixSensorBase::start()
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << d_ptr->imuInited;
     if (d_ptr->imuInited)
         d_ptr->pollTimer.start();
     else {
@@ -225,7 +226,7 @@ void MatrixSensorBase::start()
 
 void MatrixSensorBase::stop()
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << d_ptr->imuInited;
     if (d_ptr->imuInited)
         d_ptr->pollTimer.stop();
     sensorStopped();
@@ -238,5 +239,6 @@ bool MatrixSensorBase::isFeatureSupported(QSensor::Feature /*feature*/) const
 
 void MatrixSensorBase::poll(MatrixSensorBase::UpdateFlags sensorFlag)
 {
+    qWarning() << Q_FUNC_INFO;
     d_ptr->update(sensorFlag);
 }
