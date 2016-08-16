@@ -90,7 +90,7 @@ bool QMatrixSensorsPrivate::open()
 
 void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
 {
-
+qWarning() << what;
     if (what.testFlag(MatrixSensorBase::Pressure)) {
         pressureSensor.Read(&pressureData);
         if (pressure.pressure() != (qreal)pressureData.pressure) {
@@ -101,6 +101,8 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
     }
     if (what.testFlag(MatrixSensorBase::Temperature)) {
         humiditySensor.Read(&humidityData);
+        qWarning() << humidityData.temperature;
+        qWarning() << humidityData.humidity;
         if (temperature.temperature() != (qreal)humidityData.temperature) {
             temperature.setTemperature((qreal)humidityData.temperature);
             temperature.setTimestamp(produceTimestamp());
