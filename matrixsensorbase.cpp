@@ -204,11 +204,7 @@ MatrixSensorBase::MatrixSensorBase(QSensor *sensor)
       d_ptr(new QMatrixSensorsPrivate(this))
 {
     qDebug() << Q_FUNC_INFO;
-    if (d_ptr->open()) {
-        d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
-        connect(&d_ptr->pollTimer, &QTimer::timeout, [this] { d_ptr->update(sensorFlag); });
-    } else
-        qWarning() << "Could not open matrix hal";
+
 }
 
 MatrixSensorBase::~MatrixSensorBase()
@@ -218,12 +214,16 @@ MatrixSensorBase::~MatrixSensorBase()
 void MatrixSensorBase::start()
 {
     qDebug() << Q_FUNC_INFO << d_ptr->imuInited;
-    if (d_ptr->imuInited)
-        d_ptr->pollTimer.start();
-    else {
-        sensorError(-ENODEV);
-        stop();
+    if (!d_ptr->imuInited) {
+        if (d_ptr->open()) {
+            d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
+            connect(&d_ptr->pollTimer, &QTimer::timeout, [this] { d_ptr->update(sensorFlag); });
+        } else {
+            sensorError(-ENODEV);
+            stop();
+        }
     }
+    d_ptr->pollTimer.start();
 }
 
 void MatrixSensorBase::stop()
