@@ -83,6 +83,8 @@ bool QMatrixSensorsPrivate::open()
             imuSensor.Setup(bus);
         }
         imuInited = true;
+    } else {
+        qWarning() << "Error SpiInit";
     }
 
     return imuInited;
