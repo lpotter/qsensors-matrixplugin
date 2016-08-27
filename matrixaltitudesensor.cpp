@@ -16,7 +16,7 @@
 #include "matrixsensorbase.h"
 #include <QDebug>
 
-char const * const MatrixAccelerometer::id("matrix.altimeter");
+char const * const MatrixAltimeter::id("matrix.altimeter");
 
 MatrixAltimeter::MatrixAltimeter(QSensor *sensor)
     : MatrixSensorBase(sensor)
