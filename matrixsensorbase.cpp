@@ -104,7 +104,7 @@ qWarning() << what;
     }
     if (what.testFlag(MatrixSensorBase::Temperature)) {
         humiditySensor.Read(&humidityData);
-        qWarning() << humidityData.temperature;
+        qWarning() << temperature.temperature() << humidityData.temperature;
         qWarning() << humidityData.humidity;
         if (temperature.temperature() != (qreal)humidityData.temperature) {
             temperature.setTemperature((qreal)humidityData.temperature);
@@ -225,7 +225,7 @@ void MatrixSensorBase::start()
             else
                 d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
             connect(&d_ptr->pollTimer, &QTimer::timeout, [this] { d_ptr->update(sensorFlag); });
-            poll(q->sensorFlag);
+            d_ptr->update(sensorFlag);
         } else {
             sensorError(-ENODEV);
             stop();
