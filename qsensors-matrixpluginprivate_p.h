@@ -69,10 +69,10 @@ public:
     QMagnetometerReading mag;
     QRotationReading rotation;
     QAmbientTemperatureReading temp;
+    QAltimeterReading altitude;
 
     bool open();
     void update(MatrixSensorBase::UpdateFlags what);
-    void report(const matrix_hal::IMUSensor &data, MatrixSensorBase::UpdateFlags what);
 
 };
 

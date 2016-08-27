@@ -25,6 +25,7 @@
 #include <QRotationReading>
 #include <QAmbientTemperatureReading>
 #include <QPressureReading>
+#include <QAltimeterReading>
 
 #include <matrix_hal/imu_data.h>
 #include <matrix_hal/imu_sensor.h>
@@ -50,6 +51,7 @@ public:
         Orientation = 0x40,
         Magnetometer = 0x80,
         Rotation = 0x160,
+        Altimeter = 0x320,
         All = 0xFF
     };
     Q_DECLARE_FLAGS(UpdateFlags, UpdateFlag)
@@ -74,6 +76,7 @@ signals:
     void orientationChanged(const QOrientationReading &value);//
     void magnetometerChanged(const QMagnetometerReading &value);
     void rotationChanged(const QRotationReading &value);//
+    void altitudeChanged(const QAltimeterReading &value);
 private:
 };
 

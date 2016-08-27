@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     matrixpressuresensor.cpp \
     matrixtemperaturesensor.cpp \
     matrixmagnetometer.cpp \
-    matrixrotationsensor.cpp
+    matrixrotationsensor.cpp \
+    matrixaltitudesensor.cpp
 
 HEADERS += \
     matrixsensorbase.h \
@@ -28,7 +29,9 @@ HEADERS += \
     matrixpressuresensor.h \
     matrixtemperaturesensor.h \
     matrixmagnetometer.h \
-    matrixrotationsensor.h
+    matrixrotationsensor.h \
+    matrixaltitudesensor.h
+
 
 PLUGIN_TYPE = sensors
 
