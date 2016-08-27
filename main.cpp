@@ -43,6 +43,7 @@
 #include "matrixpressuresensor.h"
 #include "matrixtemperaturesensor.h"
 #include "matrixmagnetometer.h"
+#include "matrixaltitudesensor.h"
 
 #include <qsensorplugin.h>
 #include <qsensorbackend.h>
@@ -66,6 +67,9 @@ public:
         if (!QSensorManager::isBackendRegistered(QAccelerometer::type, MatrixAccelerometer::id))
             QSensorManager::registerBackend(QAccelerometer::type, MatrixAccelerometer::id, this);
 
+        if (!QSensorManager::isBackendRegistered(QAltimeter::type, MatrixAltimeter::id))
+            QSensorManager::registerBackend(QAltimeter::type, MatrixAltimeter::id, this);
+
         if (!QSensorManager::isBackendRegistered(QGyroscope::type, MatrixGyroscope::id))
             QSensorManager::registerBackend(QGyroscope::type, MatrixGyroscope::id, this);
 
@@ -88,6 +92,9 @@ public:
 
         if (sensor->identifier() == MatrixAccelerometer::id)
             return new MatrixAccelerometer(sensor);
+
+        if (sensor->identifier() == MatrixAltimeter::id)
+            return new MatrixAltimeter(sensor);
 
         if (sensor->identifier() == MatrixGyroscope::id)
             return new MatrixGyroscope(sensor);
