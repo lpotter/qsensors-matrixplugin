@@ -93,7 +93,6 @@ bool QMatrixSensorsPrivate::open()
 
 void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
 {
-qWarning() << what;
     if (what.testFlag(MatrixSensorBase::Pressure)) {
         pressureSensor.Read(&pressureData);
         if (pressure.pressure() != (qreal)pressureData.pressure) {
@@ -104,8 +103,8 @@ qWarning() << what;
     }
     if (what.testFlag(MatrixSensorBase::Temperature)) {
         humiditySensor.Read(&humidityData);
-        qWarning() << temperature.temperature() << humidityData.temperature;
-        qWarning() << humidityData.humidity;
+//        qWarning() << temperature.temperature() << humidityData.temperature;
+//        qWarning() << humidityData.humidity;
         if (temperature.temperature() != (qreal)humidityData.temperature) {
             temperature.setTemperature((qreal)humidityData.temperature);
             temperature.setTimestamp(produceTimestamp());
@@ -140,7 +139,6 @@ qWarning() << what;
         mag.setZ((qreal)imuData.mag_z * .000001);
         emit q->magnetometerChanged(mag);
     }
-
 }
 
 static inline qreal toDeg360(qreal rad)
@@ -250,6 +248,6 @@ bool MatrixSensorBase::isFeatureSupported(QSensor::Feature /*feature*/) const
 
 void MatrixSensorBase::poll(MatrixSensorBase::UpdateFlags sensorFlag)
 {
-    qWarning() << Q_FUNC_INFO;
+//    qWarning() << Q_FUNC_INFO;
     d_ptr->update(sensorFlag);
 }
