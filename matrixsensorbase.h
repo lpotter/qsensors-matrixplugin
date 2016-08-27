@@ -42,19 +42,20 @@ class MatrixSensorBase : public QSensorBackend
     Q_OBJECT
 public:
     enum UpdateFlag {
-        Humidity = 0x01,
-        Pressure = 0x02,
-        Temperature = 0x04,
-        Gyro = 0x08,
-        Acceleration = 0x20,
-        Compass = 0x40,
-        Orientation = 0x80,
-        Magnetometer = 0x160,
-        Rotation = 0x320,
-        Altimeter = 0x640,
+        Humidity = 0x00000001,
+        Pressure = 0x00000002,
+        Temperature = 0x00000004,
+        Gyro = 0x00000008,
+        Acceleration = 0x00000010,
+        Compass = 0x00000020,
+        Orientation = 0x00000040,
+        Magnetometer = 0x00000080,
+        Rotation = 0x00000200,
+        Altimeter = 0x00000500,
         All = 0xFF
     };
     Q_DECLARE_FLAGS(UpdateFlags, UpdateFlag)
+
 
     MatrixSensorBase(QSensor *sensor);
     ~MatrixSensorBase();
