@@ -68,9 +68,10 @@ QMatrixSensorsPrivate::~QMatrixSensorsPrivate()
 
 bool QMatrixSensorsPrivate::open()
 {
-    qDebug() << Q_FUNC_INFO << q->sensorFlag;
+    qDebug() << Q_FUNC_INFO << q->sensorFlag << bus;
 
-    if (bus == Q_NULLPTR) {
+    if (!bus) {
+        qWarning() << "c'tor wishbone";
         bus = new matrix_hal::WishboneBus();
     }
     if (bus->SpiInit()) {
@@ -218,11 +219,13 @@ void MatrixSensorBase::start()
     qDebug() << Q_FUNC_INFO << d_ptr->imuInited;
     if (!d_ptr->imuInited) {
         if (d_ptr->open()) {
+            qWarning() << "polling interval" << d_ptr->pollInterval;
             d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
             connect(&d_ptr->pollTimer, &QTimer::timeout, [this] { d_ptr->update(sensorFlag); });
         } else {
             sensorError(-ENODEV);
             stop();
+            return;
         }
     }
     d_ptr->pollTimer.start();
