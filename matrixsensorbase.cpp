@@ -76,7 +76,8 @@ bool QMatrixSensorsPrivate::open()
     }
     if (bus->SpiInit()) {
 
-        if (q->sensorFlag == MatrixSensorBase::Pressure) {
+        if (q->sensorFlag == MatrixSensorBase::Pressure
+                || q->sensorFlag == MatrixSensorBase::Altimeter) {
             pressureSensor.Setup(bus);
         } else if (q->sensorFlag == MatrixSensorBase::Temperature) {
             humiditySensor.Setup(bus);
