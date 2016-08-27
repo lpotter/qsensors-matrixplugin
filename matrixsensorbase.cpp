@@ -216,7 +216,7 @@ bool MatrixSensorBase::isFeatureSupported(QSensor::Feature /*feature*/) const
     return false;
 }
 
-void MatrixSensorBase::poll(MatrixSensorBase::UpdateFlags sensorFlag)
+void MatrixSensorBase::poll(MatrixSensorBase::UpdateFlag sensorFlag)
 {
 //    qWarning() << Q_FUNC_INFO;
     d_ptr->update(sensorFlag);
