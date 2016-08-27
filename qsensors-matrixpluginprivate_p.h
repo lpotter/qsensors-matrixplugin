@@ -72,7 +72,7 @@ public:
     QAltimeterReading altitude;
 
     bool open();
-    void update(MatrixSensorBase::UpdateFlags what);
+    void update(MatrixSensorBase::UpdateFlag what);
 
 };
 

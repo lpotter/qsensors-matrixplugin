@@ -42,29 +42,28 @@ class MatrixSensorBase : public QSensorBackend
     Q_OBJECT
 public:
     enum UpdateFlag {
-        Humidity = 0x00000001,
-        Pressure = 0x00000002,
-        Temperature = 0x00000004,
-        Gyro = 0x00000008,
-        Acceleration = 0x00000010,
-        Compass = 0x00000020,
-        Orientation = 0x00000040,
-        Magnetometer = 0x00000080,
-        Rotation = 0x00000200,
-        Altimeter = 0x00000500,
+        Humidity = 0,
+        Pressure,
+        Temperature,
+        Gyro,
+        Acceleration,
+        Compass,
+        Orientation,
+        Magnetometer,
+        Rotation,
+        Altimeter,
         All = 0xFF
     };
-    Q_DECLARE_FLAGS(UpdateFlags, UpdateFlag)
 
 
     MatrixSensorBase(QSensor *sensor);
     ~MatrixSensorBase();
 
     QMatrixSensorsPrivate *d_ptr;
-    MatrixSensorBase::UpdateFlags sensorFlag;
+    MatrixSensorBase::UpdateFlag sensorFlag;
     void start() Q_DECL_OVERRIDE;
     void stop() Q_DECL_OVERRIDE;
-    void poll(MatrixSensorBase::UpdateFlags sensorFlag = All);
+    void poll(MatrixSensorBase::UpdateFlag sensorFlag = All);
     bool isFeatureSupported(QSensor::Feature feature) const Q_DECL_OVERRIDE;
 
 signals:

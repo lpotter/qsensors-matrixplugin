@@ -91,9 +91,11 @@ bool QMatrixSensorsPrivate::open()
     return imuInited;
 }
 
-void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
+void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlag what)
 {
-    if (what.testFlag(MatrixSensorBase::Pressure)) {
+    switch (what) {
+    case MatrixSensorBase::Pressure:
+    {
         pressureSensor.Read(&pressureData);
         qreal pascals = (qreal)pressureData.pressure * 0.001;
         if (pressure.pressure() != pascals) {
@@ -102,18 +104,22 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
             emit q->pressureChanged(pressure);
         }
     }
-    if (what.testFlag(MatrixSensorBase::Temperature)) {
+        break;
+    case MatrixSensorBase::Temperature:
+    {
         humiditySensor.Read(&humidityData);
-//        qWarning() << temperature.temperature() << humidityData.temperature;
-//        qWarning() << humidityData.humidity;
+        //        qWarning() << temperature.temperature() << humidityData.temperature;
+        //        qWarning() << humidityData.humidity;
         if (temperature.temperature() != (qreal)humidityData.temperature) {
             temperature.setTemperature((qreal)humidityData.temperature);
             temperature.setTimestamp(produceTimestamp());
             emit q->temperatureChanged(temperature);
         }
     }
+        break;
 
-    if (what.testFlag(MatrixSensorBase::Altimeter)) {
+    case MatrixSensorBase::Altimeter:
+    {
         pressureSensor.Read(&pressureData);
         if (altitude.altitude() != (qreal)pressureData.altitude) {
             altitude.setAltitude((qreal)pressureData.altitude);
@@ -122,7 +128,9 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
         }
     }
 
-    if (what.testFlag(MatrixSensorBase::Acceleration)) {
+        break;
+    case MatrixSensorBase::Acceleration:
+    {
         imuSensor.Read(&imuData);
         acceleration.setTimestamp(produceTimestamp());
         acceleration.setX((qreal)imuData.accel_x * STANDARD_GRAVITY);
@@ -131,7 +139,9 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
         emit q->accelerationChanged(acceleration);
     }
 
-    if (what.testFlag(MatrixSensorBase::Gyro)) {
+        break;
+    case MatrixSensorBase::Gyro:
+    {
         imuSensor.Read(&imuData);
         gyro.setTimestamp(produceTimestamp());
         gyro.setX((qreal)imuData.gyro_x * RADIANS_TO_DEGREES);
@@ -141,7 +151,9 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
         emit q->gyroChanged(gyro);
     }
 
-    if (what.testFlag(MatrixSensorBase::Magnetometer)) {
+        break;
+    case MatrixSensorBase::Magnetometer:
+    {
         imuSensor.Read(&imuData);
         mag.setTimestamp(produceTimestamp());
         mag.setX((qreal)imuData.mag_x * .000001);
@@ -149,6 +161,7 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
         mag.setZ((qreal)imuData.mag_z * .000001);
         emit q->magnetometerChanged(mag);
     }
+    };
 }
 
 static inline qreal toDeg360(qreal rad)
