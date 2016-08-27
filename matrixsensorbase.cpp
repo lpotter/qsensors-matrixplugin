@@ -95,9 +95,10 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
 {
     if (what.testFlag(MatrixSensorBase::Pressure)) {
         pressureSensor.Read(&pressureData);
-        if (pressure.pressure() != (qreal)pressureData.pressure) {
+        qreal pascals = (qreal)pressureData.pressure * 0.001;
+        if (pressure.pressure() != pascals) {
             pressure.setTimestamp(produceTimestamp());
-            pressure.setPressure((qreal)pressureData.pressure);
+            pressure.setPressure(pascals);
             emit q->pressureChanged(pressure);
         }
     }
