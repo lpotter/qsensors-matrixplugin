@@ -50,8 +50,8 @@ public:
         Compass = 0x20,
         Orientation = 0x40,
         Magnetometer = 0x80,
-        Rotation = 0x160,
-        Altimeter = 0x320,
+        Rotation = 0x170,
+        Altimeter = 0x350,
         All = 0xFF
     };
     Q_DECLARE_FLAGS(UpdateFlags, UpdateFlag)
