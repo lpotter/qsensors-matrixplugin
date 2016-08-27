@@ -220,7 +220,10 @@ void MatrixSensorBase::start()
     if (!d_ptr->imuInited) {
         if (d_ptr->open()) {
             qWarning() << "polling interval" << d_ptr->pollInterval;
-            d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
+            if (d_ptr->pollInterval > 100)
+                d_ptr->pollTimer.setInterval(50);
+            else
+                d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
             connect(&d_ptr->pollTimer, &QTimer::timeout, [this] { d_ptr->update(sensorFlag); });
         } else {
             sensorError(-ENODEV);
