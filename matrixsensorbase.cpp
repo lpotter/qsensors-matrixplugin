@@ -225,7 +225,7 @@ void MatrixSensorBase::start()
             else
                 d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
             connect(&d_ptr->pollTimer, &QTimer::timeout, [this] { d_ptr->update(sensorFlag); });
-            update(q->sensorFlag);
+            poll(q->sensorFlag);
         } else {
             sensorError(-ENODEV);
             stop();
