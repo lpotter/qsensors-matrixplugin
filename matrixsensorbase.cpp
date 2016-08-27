@@ -114,7 +114,7 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlags what)
     }
 
     if (what.testFlag(MatrixSensorBase::Altimeter)) {
-        pressureSensor.Read(&humidityData);
+        pressureSensor.Read(&pressureData);
         if (altitude.altitude() != (qreal)pressureSensor.altitude) {
             altitude.setAltitude((qreal)pressureSensor.altitude);
             altitude.setTimestamp(produceTimestamp());
