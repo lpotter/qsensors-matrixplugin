@@ -26,6 +26,7 @@
 #include <QAmbientTemperatureReading>
 #include <QPressureReading>
 #include <QAltimeterReading>
+#include <QLightReading>
 
 #include <matrix_hal/matrixio_bus.h>
 #include <matrix_hal/imu_data.h>
@@ -52,6 +53,7 @@ public:
         Magnetometer,
         Rotation,
         Altimeter,
+        Uv,
         All = 0xFF
     };
 
@@ -78,6 +80,7 @@ signals:
     void rotationChanged(const QRotationReading &value);//
     void altitudeChanged(const QAltimeterReading &value);
 
+    void luxChanged(const QLightReading &value);
 };
 
 #endif // MATRIXSENSORBASE_H

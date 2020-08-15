@@ -34,6 +34,9 @@
 #include <matrix_hal/pressure_sensor.h>
 #include <matrix_hal/pressure_data.h>
 
+#include <matrix_hal/uv_data.h>
+#include <matrix_hal/uv_sensor.h>
+
 class QMatrixSensorsPrivate
 {
 public:
@@ -49,8 +52,11 @@ public:
 
     matrix_hal::PressureSensor pressureSensor;
     matrix_hal::PressureData pressureData;
-    matrix_hal::MatrixIOBus* matrixIOBus;
 
+    matrix_hal::UVSensor uvSensor;
+    matrix_hal::UVData uvData;
+
+    matrix_hal::MatrixIOBus* matrixIOBus;
 
     bool imuInited;
     int pollInterval;
@@ -70,7 +76,7 @@ public:
     QRotationReading rotation;
     QAmbientTemperatureReading temp;
     QAltimeterReading altitude;
-
+    QLightReading lux;
     bool open();
     void update(MatrixSensorBase::UpdateFlag what);
 

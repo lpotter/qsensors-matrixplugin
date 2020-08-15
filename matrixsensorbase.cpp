@@ -51,11 +51,11 @@ quint64 produceTimestamp()
 
 QMatrixSensorsPrivate::QMatrixSensorsPrivate(MatrixSensorBase *q_ptr)
     : q(q_ptr),
+      matrixIOBus(Q_NULLPTR),
       imuInited(false),
       humidityInited(false),
       pressureInited(false),
-      temperatureFromHumidity(true),
-      matrixIOBus(Q_NULLPTR)
+      temperatureFromHumidity(true)
 {
 
 }
@@ -81,6 +81,8 @@ bool QMatrixSensorsPrivate::open()
             pressureSensor.Setup(matrixIOBus);
         } else if (q->sensorFlag == MatrixSensorBase::Temperature) {
             humiditySensor.Setup(matrixIOBus);
+        } else if (q->sensorFlag == MatrixSensorBase::Uv) {
+            uvSensor.Setup(matrixIOBus);
         } else {
             imuSensor.Setup(matrixIOBus);
         }
@@ -139,7 +141,6 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlag what)
         acceleration.setZ((qreal)imuData.accel_z * STANDARD_GRAVITY);
         emit q->accelerationChanged(acceleration);
     }
-
         break;
     case MatrixSensorBase::Gyro:
     {
@@ -162,6 +163,17 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlag what)
         mag.setZ((qreal)imuData.mag_z * .000001);
         emit q->magnetometerChanged(mag);
     }
+    break;
+    case MatrixSensorBase::Uv:
+    {
+        uvSensor.Read(&uvData);
+        lux.setTimestamp(produceTimestamp());
+        lux.setLux((qreal)uvData.uv);
+        emit q->luxChanged(lux);
+    }
+    break;
+    default:
+    break;
     };
 }
 
