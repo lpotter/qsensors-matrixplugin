@@ -49,7 +49,7 @@ public:
 
     matrix_hal::PressureSensor pressureSensor;
     matrix_hal::PressureData pressureData;
-    matrix_hal::WishboneBus* bus;
+    matrix_hal::MatrixIOBus* matrixIOBus;
 
 
     bool imuInited;

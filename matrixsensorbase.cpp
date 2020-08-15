@@ -55,34 +55,34 @@ QMatrixSensorsPrivate::QMatrixSensorsPrivate(MatrixSensorBase *q_ptr)
       humidityInited(false),
       pressureInited(false),
       temperatureFromHumidity(true),
-      bus(Q_NULLPTR)
+      matrixIOBus(Q_NULLPTR)
 {
 
 }
 
 QMatrixSensorsPrivate::~QMatrixSensorsPrivate()
 {
-    delete bus;
-    bus = 0;
+    delete matrixIOBus;
+    matrixIOBus = 0;
 }
 
 bool QMatrixSensorsPrivate::open()
 {
-    qDebug() << Q_FUNC_INFO << q->sensorFlag << bus;
+    qDebug() << Q_FUNC_INFO << q->sensorFlag << matrixIOBus;
 
-    if (!bus) {
+    if (!matrixIOBus) {
         qWarning() << "c'tor wishbone";
-        bus = new matrix_hal::WishboneBus();
+        matrixIOBus = new matrix_hal::MatrixIOBus();
     }
-    if (bus->SpiInit()) {
+    if (matrixIOBus->Init()) {
 
         if (q->sensorFlag == MatrixSensorBase::Pressure
                 || q->sensorFlag == MatrixSensorBase::Altimeter) {
-            pressureSensor.Setup(bus);
+            pressureSensor.Setup(matrixIOBus);
         } else if (q->sensorFlag == MatrixSensorBase::Temperature) {
-            humiditySensor.Setup(bus);
+            humiditySensor.Setup(matrixIOBus);
         } else {
-            imuSensor.Setup(bus);
+            imuSensor.Setup(matrixIOBus);
         }
         imuInited = true;
     } else {

@@ -27,9 +27,9 @@
 #include <QPressureReading>
 #include <QAltimeterReading>
 
+#include <matrix_hal/matrixio_bus.h>
 #include <matrix_hal/imu_data.h>
 #include <matrix_hal/imu_sensor.h>
-#include <matrix_hal/wishbone_bus.h>
 
 #include <QLoggingCategory>
 
@@ -77,7 +77,7 @@ signals:
     void magnetometerChanged(const QMagnetometerReading &value);
     void rotationChanged(const QRotationReading &value);//
     void altitudeChanged(const QAltimeterReading &value);
-private:
+
 };
 
 #endif // MATRIXSENSORBASE_H
