@@ -44,6 +44,7 @@
 #include "matrixtemperaturesensor.h"
 #include "matrixmagnetometer.h"
 #include "matrixaltitudesensor.h"
+#include "matrixuvsensor.h"
 
 #include <qsensorplugin.h>
 #include <qsensorbackend.h>
@@ -82,6 +83,8 @@ public:
         if (!QSensorManager::isBackendRegistered(QMagnetometer::type, MatrixMagnetometer::id))
             QSensorManager::registerBackend(QMagnetometer::type, MatrixMagnetometer::id, this);
 
+        if (!QSensorManager::isBackendRegistered(QLightSensor::type, MatrixUvSensor::id))
+            QSensorManager::registerBackend(QLightSensor::type, MatrixUvSensor::id, this);
     }
 
     QSensorBackend *createBackend(QSensor *sensor)
@@ -107,6 +110,9 @@ public:
 
         if (sensor->identifier() == MatrixMagnetometer::id)
             return new MatrixMagnetometer(sensor);
+
+        if (sensor->identifier() == MatrixUvSensor::id)
+            return new MatrixUvSensor(sensor);
 
         return Q_NULLPTR;
     }

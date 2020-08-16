@@ -68,6 +68,8 @@ public:
     void poll(MatrixSensorBase::UpdateFlag sensorFlag = All);
     bool isFeatureSupported(QSensor::Feature feature) const Q_DECL_OVERRIDE;
 
+    bool needsImu(MatrixSensorBase::UpdateFlag sensorFlag);
+
 signals:
     void humidityChanged(qreal value);
     void pressureChanged(const QPressureReading &value);
@@ -80,7 +82,7 @@ signals:
     void rotationChanged(const QRotationReading &value);//
     void altitudeChanged(const QAltimeterReading &value);
 
-    void luxChanged(const QLightReading &value);
+    void uvChanged(const QLightReading &value);
 };
 
 #endif // MATRIXSENSORBASE_H

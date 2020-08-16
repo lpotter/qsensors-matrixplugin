@@ -57,7 +57,6 @@ QMatrixSensorsPrivate::QMatrixSensorsPrivate(MatrixSensorBase *q_ptr)
       pressureInited(false),
       temperatureFromHumidity(true)
 {
-
 }
 
 QMatrixSensorsPrivate::~QMatrixSensorsPrivate()
@@ -68,30 +67,31 @@ QMatrixSensorsPrivate::~QMatrixSensorsPrivate()
 
 bool QMatrixSensorsPrivate::open()
 {
-    qDebug() << Q_FUNC_INFO << q->sensorFlag << matrixIOBus;
-
     if (!matrixIOBus) {
-        qWarning() << "c'tor wishbone";
         matrixIOBus = new matrix_hal::MatrixIOBus();
     }
-    if (matrixIOBus->Init()) {
-
-        if (q->sensorFlag == MatrixSensorBase::Pressure
-                || q->sensorFlag == MatrixSensorBase::Altimeter) {
-            pressureSensor.Setup(matrixIOBus);
-        } else if (q->sensorFlag == MatrixSensorBase::Temperature) {
-            humiditySensor.Setup(matrixIOBus);
-        } else if (q->sensorFlag == MatrixSensorBase::Uv) {
-            uvSensor.Setup(matrixIOBus);
-        } else {
-            imuSensor.Setup(matrixIOBus);
-        }
-        imuInited = true;
+    if (matrixIOBus && matrixIOBus->Init()) {
+        switch (q->sensorFlag) {
+            case MatrixSensorBase::Pressure:
+            case MatrixSensorBase::Altimeter:
+                pressureSensor.Setup(matrixIOBus);
+            break;
+            case MatrixSensorBase::Temperature:
+                humiditySensor.Setup(matrixIOBus);
+            break;
+            case MatrixSensorBase::Uv:
+                uvSensor.Setup(matrixIOBus);
+           break;
+           default:
+                imuSensor.Setup(matrixIOBus);
+           break;
+        };
     } else {
         qWarning() << "Error SpiInit";
+        return false;
     }
 
-    return imuInited;
+    return true;
 }
 
 void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlag what)
@@ -100,7 +100,7 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlag what)
     case MatrixSensorBase::Pressure:
     {
         pressureSensor.Read(&pressureData);
-        qreal pascals = (qreal)pressureData.pressure * 0.001;
+        qreal pascals = (qreal)pressureData.pressure * 0.01;
         if (pressure.pressure() != pascals) {
             pressure.setTimestamp(produceTimestamp());
             pressure.setPressure(pascals);
@@ -111,8 +111,6 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlag what)
     case MatrixSensorBase::Temperature:
     {
         humiditySensor.Read(&humidityData);
-        //        qWarning() << temperature.temperature() << humidityData.temperature;
-        //        qWarning() << humidityData.humidity;
         if (temperature.temperature() != (qreal)humidityData.temperature) {
             temperature.setTemperature((qreal)humidityData.temperature);
             temperature.setTimestamp(produceTimestamp());
@@ -169,7 +167,7 @@ void QMatrixSensorsPrivate::update(MatrixSensorBase::UpdateFlag what)
         uvSensor.Read(&uvData);
         lux.setTimestamp(produceTimestamp());
         lux.setLux((qreal)uvData.uv);
-        emit q->luxChanged(lux);
+        emit q->uvChanged(lux);
     }
     break;
     default:
@@ -187,38 +185,50 @@ MatrixSensorBase::MatrixSensorBase(QSensor *sensor)
     : QSensorBackend(sensor),
       d_ptr(new QMatrixSensorsPrivate(this))
 {
-    qDebug() << Q_FUNC_INFO;
-
 }
 
 MatrixSensorBase::~MatrixSensorBase()
 {
 }
 
+bool MatrixSensorBase::needsImu(MatrixSensorBase::UpdateFlag sensorFlag)
+{
+    bool isImu = false;
+    switch (sensorFlag) {
+        case MatrixSensorBase::Gyro:
+        case MatrixSensorBase::Acceleration:
+        case MatrixSensorBase::Compass:
+        case MatrixSensorBase::Orientation:
+        case MatrixSensorBase::Magnetometer:
+            isImu = true;
+        break;
+        default:
+        break;
+    };
+    return isImu;
+}
+
 void MatrixSensorBase::start()
 {
-    qDebug() << Q_FUNC_INFO << d_ptr->imuInited;
-    if (!d_ptr->imuInited) {
-        if (d_ptr->open()) {
-            qWarning() << "polling interval" << d_ptr->pollInterval;
-            if (d_ptr->pollInterval > 100)
-                d_ptr->pollTimer.setInterval(50);
-            else
-                d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
-            connect(&d_ptr->pollTimer, &QTimer::timeout, [this] { d_ptr->update(sensorFlag); });
-            d_ptr->update(sensorFlag);
-        } else {
-            sensorError(-ENODEV);
-            stop();
-            return;
-        }
+    d_ptr->imuInited = needsImu(sensorFlag);
+    if (d_ptr->open()) {
+        if (d_ptr->pollInterval > 100)
+            d_ptr->pollTimer.setInterval(50);
+        else
+            d_ptr->pollTimer.setInterval(d_ptr->pollInterval);
+        connect(&d_ptr->pollTimer, &QTimer::timeout, [this] { d_ptr->update(sensorFlag); });
+        d_ptr->update(sensorFlag);
+    } else {
+        qWarning() << Q_FUNC_INFO << "Sensor not opened";
+        sensorError(-ENODEV);
+        stop();
+        return;
     }
     d_ptr->pollTimer.start();
 }
 
 void MatrixSensorBase::stop()
 {
-    qDebug() << Q_FUNC_INFO << d_ptr->imuInited;
     if (d_ptr->imuInited)
         d_ptr->pollTimer.stop();
     sensorStopped();
@@ -231,6 +241,5 @@ bool MatrixSensorBase::isFeatureSupported(QSensor::Feature /*feature*/) const
 
 void MatrixSensorBase::poll(MatrixSensorBase::UpdateFlag sensorFlag)
 {
-//    qWarning() << Q_FUNC_INFO;
     d_ptr->update(sensorFlag);
 }
