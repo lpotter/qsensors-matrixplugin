@@ -1,0 +1,42 @@
+{
+    "$schema": "http://qt.io/schema/extension-schema-v1#",
+    "title": "QSensors Matrix Creator plugin",
+    "extensionType": [
+        "library"
+    ],
+    "version": "1.0.0",
+    "vendor": {
+        "name": "llornkcor technologies",
+        "url": "https://llornkcor.com/software"
+    },
+    "contact": "dev",
+    "copyright": [ "Lorn Potter" ],
+    "author": "Lorn Potter",
+    "icon": "https://upload.wikimedia.org/wikipedia/en/a/ae/TheQtCompany_Logo.png",
+    "licenses": [
+      { "licenseType": "GPLv3",
+        "licenseUrl": "https://www.gnu.org/licenses/gpl-3.0.html" },
+	{ "licenseType": "LGPL",
+	"licenseUrl": "https://www.gnu.org/licenses/lgpl-3.0.html" }	
+    ],
+    "created": "2020-08-16",
+    "lastUpdate": "2020-08-16",
+    "platforms": [
+        "raspberry pi", "Raspbian"
+    ],
+    "qtVersions": [
+        "5.11.3", "5.12.5", "5.14.2", "5.15.1"
+    ],
+    "tags": [
+        "QtSensors", "Raspberry Pi" ],
+    "price": {
+        "listprice": 0
+    },
+    "support": "dev@llornkcor.com",
+    "bugUrl": "https://github.com/lpotter/qsensors-matrixplugin/issues",
+    "sourceRepoUrl": "https://github.com/lpotter/qsensors-matrixplugin/",
+    "dependencies": [
+        "matrixio-creator-init","libmatrixio-creator-hal", "QtSensors"
+    ]
+}
+
